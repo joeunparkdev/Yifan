@@ -5,9 +5,14 @@
  */
 package COEN346_Pro_01;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 /**
  *
@@ -18,170 +23,130 @@ public class testing {
    //delete it if used in another package
 }
 
-//code copied online
-class MergeSort
+class MergeSort_COEN346 
 {
-    
-    public static int count = 0;
-
-    void merge(int array[], int a, int b, int c)// merge method need be revised!!!
+    //public static int count = 0;// for testing only
+    void merge(int array[], int left, int mid, int right)// merge method need be revised!!!
     {
-        // Find sizes of two subarrays to be merged
-        int size1 = b - a + 1;
-        int size2 = c - b;
- 
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
         /* Create temp arrays */
-        int left[] = new int[size1];
-        int right[] = new int[size2];
-        
-        int printArray[] = new int[size1+size2];
- 
+        int L[] = new int[n1];
+        int R[] = new int[n2];
+       
         /*Copy data to temp arrays*/
-        while (i<size1 && j<size2) {
-            left[i] = array[a + i];
-            right[j] = array[b + 1 + j];
-        }
-//        /*
-//        for (int i = 0; i < size1; ++i)
-//            left[i] = array[a + i];
-//        for (int j = 0; j < size2; ++j)
-//            right[j] = array[b + 1 + j];
-//
-//         */
-        
-        
+        for (int i = 0; i < n1; ++i)
+            L[i] = array[left + i];
+        for (int j = 0; j < n2; ++j)
+            R[j] = array[mid + 1 + j];
+       
         /* Merge the temp arrays */
  
         // Initial indexes of first and second subarrays
         int i = 0, j = 0;
- 
         // Initial index of merged subarry array
-        int k = a;
-        for (int i = 0; i < size1; ++i) {
-            if (left[i] <= right[j]) {
-                array[k] = left[i];
+        int k = left;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                array[k] = L[i];
                 i++;
             }
             else {
-                array[k] = right[j];
+                array[k] = R[j];
                 j++;
             }
             k++;
         }
-//        while (i < size1 && j < size2) {
-//            if (left[i] <= right[j]) {
-//                array[k] = left[i];
-//                i++;
-//            }
-//            else {
-//                array[k] = right[j];
-//                j++;
-//            }
-//            k++;
-//        }
- 
         /* Copy remaining elements of L[] if any */
-        for (int i=0; i<size1; i++){
-            array[k] = left[i];
+        while (i < n1) {
+            array[k] = L[i];
             i++;
             k++;
         }
-//        while (i < size1) {
-//            array[k] = left[i];
-//            i++;
-//            k++;
-//        }
-        for (int j=0; j<size2; j++){
-            array[k] = left[j];
+        /* Copy remaining elements of R[] if any */
+        while (j < n2) {
+            array[k] = R[j];
             j++;
             k++;
-        }
-//        /* Copy remaining elements of R[] if any */
-//        while (j < size2) {
-//            array[k] = right[j];
-//            j++;
-//            k++;
-//        }
-//
-        for(int k=1; k<(size1+size2); k++){
-            printArray[k] = array[k];
-        }
+        }      
     }
- 
-    
-    void sort(int arr[], int l, int r)
-    {
-        
+    // recursive sort by using thread 
+    void sort(int arr[], int left, int right, FileWriter fileWriter) throws IOException
+    {  
         Thread thread_test_01;
         thread_test_01 = new Thread(new Runnable(){
-
             public void run(){
-                //count++;// to test thread quantity
+                //count++;// for testing only
                 //System.out.print("count :"+count);
                 try{
-                    System.out.println();
-                    if (l < r) {
+                    //System.out.println();
+                    if (left < right) {
                         // Find the middle point
-                        int m =l+ (r-l)/2;
-                        sort(arr, l, m);
-                        sort(arr, m + 1, r);
+                        int mid =left+ (right-left)/2;
+                        sort(arr, left, mid, fileWriter);
+                        sort(arr, mid + 1, right, fileWriter);
                         // Merge the sorted halves
-                        merge(arr, l, m, r);
+                        merge(arr, left, mid, right);
                     }
                 }
                 catch (Exception ex){
                     System.out.println("Exception: " + ex);
                 }
-            }
+            } 
         });
-        thread_test_01.start();
-        System.out.println("Thread start: " + thread_test_01.getName());
         
         try {
+            thread_test_01.start();
+            System.out.println(thread_test_01.getName() + "start");//for testing only
+            fileWriter.write(thread_test_01.getName() + " start \n");
+       
             thread_test_01.join();
-            System.out.println("Thread finish: " + thread_test_01.getName());
+            System.out.println(thread_test_01.getName() + " finish: ");//for testing only
+            fileWriter.write(thread_test_01.getName() + " finish: ");
         } catch (InterruptedException ex) {
-            Logger.getLogger(MergeSort_online.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MergeSort_COEN346.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        for(int i =l; i<=r; ++i){
-            System.out.print(arr[i]+" ");
+        for(int i =left; i<=right; ++i){
+            System.out.print(arr[i]+" ");//for testing only
+            fileWriter.write(arr[i]+" ");
         }
-            System.out.println();
-        
+            System.out.println();//for testing only
+            fileWriter.write("\n");
     }
     
-    /***
-    class test implements Runnable{
-        public void run(){
-            int arr[] = { 12, 11, 13, 5, 6, 7, 1000, 900, 800, 700 ,600, 850, 330, 990, 399, 550};
- 
-            //System.out.println("Given Array");
-            //printArray(arr);
-            MergeSort_online ob = new MergeSort_online();
-            ob.sort(arr, 0, arr.length - 1);
-        }
-      
-    }
-    ***/
-    
-     //code copied online
     public static void main(String args[]) throws InterruptedException
     {
-        int arrayp[] = {1,10,100,1000,10000};
-        System.out.println("Array before sorted:");
-        printArray(array);
-        MergeSort merge= new MergeSort();
-        merge.sort(array, 0, array.length - 1);
-        System.out.println("\nArray after sorted:");
-        printArray(array);
-//        int arr[] = { 12, 11, 13, 5, 69, 17, 1000, 900};
-//        System.out.println("Given Array");
-//        printArray(arr);
-//        MergeSort_online ob = new MergeSort_online();
-//        ob.sort(arr, 0, arr.length - 1);
-//        System.out.println("\nSorted array");
-//        printArray(arr);
+        System.out.println("Before Sorting");//for testing only
+        try{
+            ArrayList<String> arrayIn_String = new ArrayList(Files.readAllLines(Paths.get("/Users/yifan/Desktop/","input.txt")));
+            int[] arrayIn_Int = new int[arrayIn_String.size()];
+            
+            for(int i=0; i<arrayIn_String.size();i++){
+                arrayIn_Int[i]=Integer.parseInt(arrayIn_String.get(i));
+                System.out.print(arrayIn_Int[i]+" ");//for testing only
+                System.out.println();//for testing only
+            }
+            FileWriter fileWriter = new FileWriter("/Users/yifan/Desktop/output.txt");
+            MergeSort_COEN346 Obj = new MergeSort_COEN346();
+            Obj.sort(arrayIn_Int, 0, arrayIn_Int.length - 1,fileWriter);//call the mergesort
+            fileWriter.close();
+            
+            System.out.println("\nAfter Sorting");//for testing only
+            printArray(arrayIn_Int);//for testing only
+        }
+        catch(IOException e){
+            System.out.print(e);
+            e.printStackTrace();
+        }
+        
+        //int arr[] = { 12, 11, 13, 5, 69, 17, 1000, 900};
+        //System.out.println("Given Array");
+        //printArray(arr);
+        //MergeSort_online ob = new MergeSort_online();
+        //ob.sort(arr, 0, arr.length - 1);
+        //System.out.println("\nSorted array");
+        //printArray(arr);
         
         /***
         Thread thread_test = new Thread(new Runnable(){
@@ -200,7 +165,7 @@ class MergeSort
         thread_test.join();
         ***/
     }
-        
+   
     static void printArray(int arr[])
     {
         int n = arr.length;
