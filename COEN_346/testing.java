@@ -23,7 +23,9 @@ class MergeSort_COEN346
         System.out.println("\n\n-----------------------\nStarting Merge-Sort:\n-----------------------");
 
         try{
-            FileWriter fileWriter = new FileWriter(".\\COEN_346\\output.txt");
+            String workingDirectory = Paths.get("").toAbsolutePath().toString();
+            String subFolder = "COEN_346";
+            FileWriter fileWriter = new FileWriter(Paths.get(workingDirectory, subFolder, "output.txt").toAbsolutePath().toString());
             sort(intArray, 0, intArray.length - 1,fileWriter);//call the mergesort
             fileWriter.close();
             
@@ -154,7 +156,7 @@ class MergeSort_COEN346
         List<String> inputLines = Collections.emptyList(); 
 
         // Get Working Directory. Code is one folder lower.
-        String workingDirectory = System.getProperty("user.dir");
+        String workingDirectory = Paths.get("").toAbsolutePath().toString();
         String subFolder = "COEN_346";
 
         try
