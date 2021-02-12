@@ -17,18 +17,26 @@ class MergeSort_COEN346
         int[] intArray = Arrays.stream(inputAsIntegerArray).mapToInt(Integer::intValue).toArray();
 
         // Print input to console (TEST)
-        
         System.out.println("\n-----------------------\nInput - Before Sorting:\n-----------------------");
         printArray(intArray);
         System.out.println("\n\n-----------------------\nStarting Merge-Sort:\n-----------------------");
 
         try{
-            FileWriter fileWriter = new FileWriter(".\\COEN_346\\output.txt");
-            sort(intArray, 0, intArray.length - 1,fileWriter);//call the mergesort
+            //Get working 
+            String workingDirectory = Paths.get("").toAbsolutePath().toString();
+
+            // Open the output file
+            FileWriter fileWriter = new FileWriter(Paths.get(workingDirectory, "output.txt").toAbsolutePath().toString());
+
+            // Start the merge-sort
+            sort(intArray, 0, intArray.length - 1,fileWriter);
+
+            // Close the output file
             fileWriter.close();
             
-            System.out.println("\n-----------------------\nAfter Sorting:\n-----------------------");//for testing only
-            printArray(intArray);//for testing only
+            // Print results to console
+            System.out.println("\n-----------------------\nAfter Sorting:\n-----------------------");
+            printArray(intArray);
         }
         catch(IOException e){
             System.out.print(e);
@@ -154,12 +162,11 @@ class MergeSort_COEN346
         List<String> inputLines = Collections.emptyList(); 
 
         // Get Working Directory. Code is one folder lower.
-        String workingDirectory = System.getProperty("user.dir");
-        String subFolder = "COEN_346";
+        String workingDirectory = Paths.get("").toAbsolutePath().toString();
 
         try
         { 
-            inputLines = Files.readAllLines(Paths.get(workingDirectory, subFolder, fileName), StandardCharsets.UTF_8); 
+            inputLines = Files.readAllLines(Paths.get(workingDirectory, fileName), StandardCharsets.UTF_8); 
         } 
   
         catch (IOException exception) 
