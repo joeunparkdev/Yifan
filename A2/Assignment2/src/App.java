@@ -11,7 +11,11 @@ public class App {
     private static ArrayList<User> users = new ArrayList<User>();
 
     public static void main(String[] args) throws Exception {
+
+        // Read input file. This also sets the quantum time and the users
         readInputFile("input.txt");
+
+        // DO MORE STUFF
     }
 
     public static void readInputFile(String fileName) {
